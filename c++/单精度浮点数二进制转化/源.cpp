@@ -137,6 +137,13 @@ void my_float::float_to_binary()
 	single_float_Estr = Estr;
 	single_float_Mstr = Mstr;
 }
+typedef struct _FP_SIGLE
+{
+	unsigned __int32 nFraction : 23;
+	unsigned __int32 nExponent : 8;
+	unsigned __int32 nSign : 1;
+} FP_SINGLE;
+
 
 int main()
 {
@@ -145,11 +152,20 @@ int main()
 	cout << "请输入一个单精度类型的浮点数：" << endl << "样例输入（我的学号）：2017210.140"<<endl;
 	my_float my_student_id(2017210.140);
 	my_student_id.float_to_binary();
-	cout << "样例输出：" << endl;
+	cout << "样例输出：" << endl<<endl;
 	my_student_id.show_binary();
 	my_student_id.show_sign();
 	my_student_id.show_Estr();
 	my_student_id.show_Mstr();
+	temp = 2017210.140;
+	FP_SINGLE* p = (FP_SINGLE*)&temp;
+	cout << "方法二样例输出：" << endl;
+	cout << "输入浮点数的单精度32位二进制数的符号位是：    ";
+	cout << p->nSign << endl;
+	cout << "输入浮点数的单精度32位二进制数的指数位是：    ";
+	cout << p->nExponent << endl;
+	cout << "输入浮点数的单精度32位二进制数的尾数位是：    ";
+	cout << p->nFraction<< endl;
 	cout << "请输入一个单精度类型的浮点数：" << endl;
 	while (cin>>temp)
 	{
@@ -159,7 +175,17 @@ int main()
 		my_single_float.show_sign();
 		my_single_float.show_Estr();
 		my_single_float.show_Mstr();
+		FP_SINGLE* p = (FP_SINGLE*)&temp;
+		cout << "方法二样例输出：" << endl;
+		cout << "输入浮点数的单精度32位二进制数的符号位是：    ";
+		cout << p->nSign << endl;
+		cout << "输入浮点数的单精度32位二进制数的指数位是：    ";
+		cout << p->nExponent << endl;
+		cout << "输入浮点数的单精度32位二进制数的尾数位是：    ";
+		cout << p->nFraction << endl;
+
 		cout << "继续输入一个单精度浮点数：" << endl;
+
 	}
 	return 0;
 }
