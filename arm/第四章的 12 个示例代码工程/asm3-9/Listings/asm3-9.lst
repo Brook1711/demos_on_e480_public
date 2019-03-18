@@ -1,0 +1,229 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; asm3-9.s
+    2 00000000                 THUMB                        ; Indicate THUMB co
+                                                            de is used
+    3 00000000                 PRESERVE8                    ; Indicate the code
+                                                             here preserve 
+    4 00000000         ; 8 byte stack alignment
+    5 00000000                 AREA             |.text|, CODE, READONLY ; Start
+                                                             of CODE area
+    6 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Base| 
+                                                            ; RO段起始地址
+                                                            
+    7 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Limit| ; 
+                                                            RO段末地址后�
+                                                            �的地址,即RW段
+                                                            起始地址
+    8 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Base| ; R
+                                                            W段在RAM里的运
+                                                            行区起始地址
+    9 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Limit| ;R
+                                                            W段在RAM里的运
+                                                            行区末地址后�
+                                                            ��的地址
+   10 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Base| ; Z
+                                                            I段在RAM里的运
+                                                            行区起始地址
+   11 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Limit| ;Z
+                                                            I段在RAM里的运
+                                                            行区末地址后�
+                                                            ��的地址
+   12 00000000                 EXPORT           MyMain
+   13 00000000         MyMain  FUNCTION
+   14 00000000         ; RW段和ZI段初始化代码（第25-41行）：完成
+                       RW段数据的拷贝和ZI段的清零
+   15 00000000         ; RW段数据的拷贝：从Image里的加载区拷贝�
+                       �RAM里运行区（第26-34行）
+   16 00000000 480E            LDR              r0,  =|Image$$ER_IROM1$$RO$$Lim
+it|
+   17 00000002 490F            LDR              r1,  =|Image$$RW_IRAM1$$RW$$Bas
+e|
+   18 00000004 4B0F            LDR              r3,  =|Image$$RW_IRAM1$$ZI$$Bas
+e|
+   19 00000006         Init_RW
+   20 00000006 4299            CMP              r1,  r3
+   21 00000008 BF3C F850 
+              2B04             LDRCC            r2,  [r0], #4
+   22 0000000E F841 2B04       STRCC            r2,  [r1], #4
+   23 00000012 D3F8            BCC              Init_RW
+   24 00000014         ; ZI段清零：ZI段在RAM里的运行区全部清零�
+                       �第35-41行）
+   25 00000014 490C            LDR              r1,  =|Image$$RW_IRAM1$$ZI$$Lim
+it|
+   26 00000016 F04F 0200       MOV              r2,  #0
+   27 0000001A         Init_ZI
+   28 0000001A 428B            CMP              r3,  r1
+   29 0000001C BF38 F843 
+              2B04             STRCC            r2,  [r3],#4
+   30 00000022 D3FA            BCC              Init_ZI
+   31 00000024         
+   32 00000024         ; 功能代码：此处调用C函数testfunc
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   33 00000024                 IMPORT           testfunc    ;引入其它源文
+                                                            件中的函数名t
+                                                            estfunc
+   34 00000024 F7FF FFFE       BL               testfunc    ;调用testfunc函�
+                                                            ��
+   35 00000028         deadloop
+   36 00000028 E7FE            B                deadloop    ; 无限循环
+   37 0000002A                 ENDFUNC
+   38 0000002A         
+   39 0000002A         ; 汇编函数my_add_asm
+   40 0000002A                 EXPORT           my_add_asm
+   41 0000002A         my_add_asm
+                               FUNCTION
+   42 0000002A 4408            ADD              R0, R0, R1  ;R0 = x1 + x2
+   43 0000002C 4410            ADD              R0, R0, R2  ;R0 = x1 + x2 + x3
+   44 0000002E 4418            ADD              R0, R0, R3  ;R0 = x1 + x2 + x3 
+                                                            + x4
+   45 00000030 9900            LDR              R1,  [SP]   ;从 栈顶 位置�
+                                                            ��出x5到R1
+   46 00000032 4408            ADD              R0, R0, R1  ;R0 = x1 + x2 + x3 
+                                                            + x4 + x5
+   47 00000034 9A01            LDR              R2,  [SP,  #4] ;从 栈顶+4 �
+                                                            �置取出x6到R2
+   48 00000036 4410            ADD              R0, R0, R2  ;R0 = x1 + x2 + x3 
+                                                            + x4 + x5 + x6
+   49 00000038 4770            BX               LR          ;返回结果位于
+                                                            R0中
+   50 0000003A                 ENDFUNC
+   51 0000003A BF00            NOP
+   52 0000003C                 END
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\asm3-9.d -o.\objects\asm3-9.o -I.\RTE\_Target_1 -ID:\
+Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\In
+clude -ID:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 526" -
+-predefine="STM32F407xx SETA 1" --list=.\listings\asm3-9.lst asm3-9.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 5 in file asm3-9.s
+   Uses
+      None
+Comment: .text unused
+Init_RW 00000006
+
+Symbol: Init_RW
+   Definitions
+      At line 19 in file asm3-9.s
+   Uses
+      At line 23 in file asm3-9.s
+Comment: Init_RW used once
+Init_ZI 0000001A
+
+Symbol: Init_ZI
+   Definitions
+      At line 27 in file asm3-9.s
+   Uses
+      At line 30 in file asm3-9.s
+Comment: Init_ZI used once
+MyMain 00000000
+
+Symbol: MyMain
+   Definitions
+      At line 13 in file asm3-9.s
+   Uses
+      At line 12 in file asm3-9.s
+Comment: MyMain used once
+deadloop 00000028
+
+Symbol: deadloop
+   Definitions
+      At line 35 in file asm3-9.s
+   Uses
+      At line 36 in file asm3-9.s
+Comment: deadloop used once
+my_add_asm 0000002A
+
+Symbol: my_add_asm
+   Definitions
+      At line 41 in file asm3-9.s
+   Uses
+      At line 40 in file asm3-9.s
+Comment: my_add_asm used once
+6 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$ER_IROM1$$RO$$Base 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Base
+   Definitions
+      At line 6 in file asm3-9.s
+   Uses
+      None
+Comment: Image$$ER_IROM1$$RO$$Base unused
+Image$$ER_IROM1$$RO$$Limit 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Limit
+   Definitions
+      At line 7 in file asm3-9.s
+   Uses
+      At line 16 in file asm3-9.s
+Comment: Image$$ER_IROM1$$RO$$Limit used once
+Image$$RW_IRAM1$$RW$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Base
+   Definitions
+      At line 8 in file asm3-9.s
+   Uses
+      At line 17 in file asm3-9.s
+Comment: Image$$RW_IRAM1$$RW$$Base used once
+Image$$RW_IRAM1$$RW$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Limit
+   Definitions
+      At line 9 in file asm3-9.s
+   Uses
+      None
+Comment: Image$$RW_IRAM1$$RW$$Limit unused
+Image$$RW_IRAM1$$ZI$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Base
+   Definitions
+      At line 10 in file asm3-9.s
+   Uses
+      At line 18 in file asm3-9.s
+Comment: Image$$RW_IRAM1$$ZI$$Base used once
+Image$$RW_IRAM1$$ZI$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Limit
+   Definitions
+      At line 11 in file asm3-9.s
+   Uses
+      At line 25 in file asm3-9.s
+Comment: Image$$RW_IRAM1$$ZI$$Limit used once
+testfunc 00000000
+
+Symbol: testfunc
+   Definitions
+      At line 33 in file asm3-9.s
+   Uses
+      At line 34 in file asm3-9.s
+Comment: testfunc used once
+7 symbols
+348 symbols in table

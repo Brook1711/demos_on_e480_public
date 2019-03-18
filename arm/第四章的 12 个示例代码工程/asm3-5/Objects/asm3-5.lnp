@@ -1,0 +1,6 @@
+--cpu=Cortex-M4.fp
+".\objects\asm3-5.o"
+--strict --scatter ".\Objects\asm3-5.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\asm3-5.map" -o .\Objects\asm3-5.axf

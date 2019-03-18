@@ -1,0 +1,272 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; asm3-8.s
+    2 00000000                 THUMB                        ; Indicate THUMB co
+                                                            de is used
+    3 00000000                 PRESERVE8                    ; Indicate the code
+                                                             here preserve 
+    4 00000000         ; 8 byte stack alignment
+    5 00000000                 AREA             |.text|, CODE, READONLY ; Start
+                                                             of CODE area
+    6 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Base| 
+                                                            ; RO段起始地址
+                                                            
+    7 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Limit| ; 
+                                                            RO段末地址后�
+                                                            �的地址,即RW段
+                                                            起始地址
+    8 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Base| ; R
+                                                            W段在RAM里的运
+                                                            行区起始地址
+    9 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Limit| ;R
+                                                            W段在RAM里的运
+                                                            行区末地址后�
+                                                            ��的地址
+   10 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Base| ; Z
+                                                            I段在RAM里的运
+                                                            行区起始地址
+   11 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Limit| ;Z
+                                                            I段在RAM里的运
+                                                            行区末地址后�
+                                                            ��的地址
+   12 00000000                 EXPORT           MyMain
+   13 00000000         MyMain  FUNCTION
+   14 00000000         ; RW段和ZI段初始化代码（第25-41行）：完成
+                       RW段数据的拷贝和ZI段的清零
+   15 00000000         ; RW段数据的拷贝：从Image里的加载区拷贝�
+                       �RAM里运行区（第26-34行）
+   16 00000000 4815            LDR              r0,  =|Image$$ER_IROM1$$RO$$Lim
+it|
+   17 00000002 4916            LDR              r1,  =|Image$$RW_IRAM1$$RW$$Bas
+e|
+   18 00000004 4B16            LDR              r3,  =|Image$$RW_IRAM1$$ZI$$Bas
+e|
+   19 00000006         Init_RW
+   20 00000006 4299            CMP              r1,  r3
+   21 00000008 BF3C F850 
+              2B04             LDRCC            r2,  [r0], #4
+   22 0000000E F841 2B04       STRCC            r2,  [r1], #4
+   23 00000012 D3F8            BCC              Init_RW
+   24 00000014         ; ZI段清零：ZI段在RAM里的运行区全部清零�
+                       �第35-41行）
+   25 00000014 4913            LDR              r1,  =|Image$$RW_IRAM1$$ZI$$Lim
+it|
+   26 00000016 F04F 0200       MOV              r2,  #0
+   27 0000001A         Init_ZI
+   28 0000001A 428B            CMP              r3,  r1
+   29 0000001C BF38 F843 
+              2B04             STRCC            r2,  [r3],#4
+   30 00000022 D3FA            BCC              Init_ZI
+   31 00000024         
+   32 00000024         ; 功能代码：此处调用C函数my_add_c
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   33 00000024 B50F            STMFD            SP!,  {R0-R3, LR} ;调用者负
+                                                            责压栈保存 R0-
+                                                            R3, LR旧值
+   34 00000026 B430            STMFD            SP!,  {R4-R5} ;本函数用到�
+                                                            ��R4-R5,所以负�
+                                                            �压栈保存R4-R5�
+                                                            ��值
+   35 00000028 F04F 0001       MOV              R0,  #1     ;第1个参数(x1)
+   36 0000002C F04F 0102       MOV              R1,  #2     ;第2个参数(x2)
+   37 00000030 F04F 0203       MOV              R2,  #3     ;第3个参数(x3)
+   38 00000034 F04F 0304       MOV              R3,  #4     ;第4个参数(x4)
+   39 00000038 F04F 0405       MOV              R4,  #5     ;第5个参数(x5)
+   40 0000003C F04F 0506       MOV              R5,  #6     ;第6个参数(x6)
+   41 00000040 B430            STMFD            SP!,  {R4-R5} ;注意入栈顺�
+                                                            ��：x6先入栈，
+                                                            x5后入栈
+   42 00000042                 IMPORT           my_add_c    ;引入其它源文
+                                                            件中的函数名m
+                                                            y_add_c
+   43 00000042 F7FF FFFE       BL               my_add_c    ;调用my_add_c函�
+                                                            ��，返回结果�
+                                                            �于R0中
+   44 00000046 4D08            LDR              R5,  = Result ;取得变量Resu
+                                                            lt的地址
+   45 00000048 6028            STR              R0,  [R5]   ;把my_add_c函数�
+                                                            ��回结果存入�
+                                                            �量Result
+   46 0000004A B001            ADD              SP,  SP,  #4 ; 清除栈中参�
+                                                            ��x5,本语句执�
+                                                            �完后SP指向栈�
+                                                            ��参数x6
+   47 0000004C B001            ADD              SP,  SP,  #4 ; 清除栈中参�
+                                                            ��x6,本语句执�
+                                                            �完后SP指向栈�
+                                                            ��R4旧值
+   48 0000004E BC30            LDMFD            SP!,  { R4-R5} ; 弹栈恢复R4
+                                                            -R5旧值
+   49 00000050 E8BD 400F       LDMFD            SP!,  {R0-R3, LR} ; 调用者�
+                                                            �责弹栈恢复R0-
+                                                            R3, LR旧值
+   50 00000054         deadloop
+   51 00000054 E7FE            B                deadloop    ; 无限循环
+   52 00000056                 ENDFUNC
+   53 00000056 BF00            NOP
+   54 00000058         
+   55 00000058 00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000         AREA             MyData, DATA, READWRITE ; 声�
+                                                            �MyData数据段
+   56 00000000 00000000 
+                       Result  DCD              0           ; 该变量用于�
+                                                            �存my_add_c函数�
+                                                            ��返回值
+   57 00000004                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\asm3-8.d -o.\objects\asm3-8.o -I.\RTE\_Target_1 -ID:\
+Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\In
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+clude -ID:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 526" -
+-predefine="STM32F407xx SETA 1" --list=.\listings\asm3-8.lst asm3-8.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 5 in file asm3-8.s
+   Uses
+      None
+Comment: .text unused
+Init_RW 00000006
+
+Symbol: Init_RW
+   Definitions
+      At line 19 in file asm3-8.s
+   Uses
+      At line 23 in file asm3-8.s
+Comment: Init_RW used once
+Init_ZI 0000001A
+
+Symbol: Init_ZI
+   Definitions
+      At line 27 in file asm3-8.s
+   Uses
+      At line 30 in file asm3-8.s
+Comment: Init_ZI used once
+MyMain 00000000
+
+Symbol: MyMain
+   Definitions
+      At line 13 in file asm3-8.s
+   Uses
+      At line 12 in file asm3-8.s
+Comment: MyMain used once
+deadloop 00000054
+
+Symbol: deadloop
+   Definitions
+      At line 50 in file asm3-8.s
+   Uses
+      At line 51 in file asm3-8.s
+Comment: deadloop used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+MyData 00000000
+
+Symbol: MyData
+   Definitions
+      At line 55 in file asm3-8.s
+   Uses
+      None
+Comment: MyData unused
+Result 00000000
+
+Symbol: Result
+   Definitions
+      At line 56 in file asm3-8.s
+   Uses
+      At line 44 in file asm3-8.s
+Comment: Result used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$ER_IROM1$$RO$$Base 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Base
+   Definitions
+      At line 6 in file asm3-8.s
+   Uses
+      None
+Comment: Image$$ER_IROM1$$RO$$Base unused
+Image$$ER_IROM1$$RO$$Limit 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Limit
+   Definitions
+      At line 7 in file asm3-8.s
+   Uses
+      At line 16 in file asm3-8.s
+Comment: Image$$ER_IROM1$$RO$$Limit used once
+Image$$RW_IRAM1$$RW$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Base
+   Definitions
+      At line 8 in file asm3-8.s
+   Uses
+      At line 17 in file asm3-8.s
+Comment: Image$$RW_IRAM1$$RW$$Base used once
+Image$$RW_IRAM1$$RW$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Limit
+   Definitions
+      At line 9 in file asm3-8.s
+   Uses
+      None
+Comment: Image$$RW_IRAM1$$RW$$Limit unused
+Image$$RW_IRAM1$$ZI$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Base
+   Definitions
+      At line 10 in file asm3-8.s
+   Uses
+      At line 18 in file asm3-8.s
+Comment: Image$$RW_IRAM1$$ZI$$Base used once
+Image$$RW_IRAM1$$ZI$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Limit
+   Definitions
+      At line 11 in file asm3-8.s
+   Uses
+      At line 25 in file asm3-8.s
+Comment: Image$$RW_IRAM1$$ZI$$Limit used once
+my_add_c 00000000
+
+Symbol: my_add_c
+   Definitions
+      At line 42 in file asm3-8.s
+   Uses
+      At line 43 in file asm3-8.s
+Comment: my_add_c used once
+7 symbols
+349 symbols in table

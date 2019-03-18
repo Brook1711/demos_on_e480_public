@@ -1,0 +1,6 @@
+--cpu Cortex-M4.fp -g --apcs=interwork 
+-I"F:\第四章的 12 个示例代码工程\asm3-3\RTE\_Target_1"
+-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+-IC:\Keil_v5\ARM\CMSIS\Include
+--pd "__UVISION_VERSION SETA 522" --pd "STM32F407xx SETA 1"
+--list .\listings\asm3-3.lst --xref -o .\objects\asm3-3.o --depend .\objects\asm3-3.d "asm3-3.s"

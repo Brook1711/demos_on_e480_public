@@ -1,0 +1,105 @@
+Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+==============================================================================
+
+Section Cross References
+
+    asm3-6.o(Reset) refers to asm3-6.o(MyStack) for __initial_sp
+    asm3-6.o(Reset) refers to asm3-6.o(Init) for Reset_Handler
+    asm3-6.o(Init) refers to asm3-6.o(MyData) for Number
+
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    asm3-6.s                                 0x00000000   Number         0  asm3-6.o ABSOLUTE
+    Reset                                    0x08000000   Section        8  asm3-6.o(Reset)
+    Init                                     0x08000008   Section      140  asm3-6.o(Init)
+    $v0                                      0x08000008   Number         0  asm3-6.o(Init)
+    Reset_Handler                            0x08000009   Thumb Code     0  asm3-6.o(Init)
+    MyData                                   0x20000000   Section        8  asm3-6.o(MyData)
+    Number                                   0x20000000   Data           4  asm3-6.o(MyData)
+    String                                   0x20000004   Data           4  asm3-6.o(MyData)
+    MyStack                                  0x20000008   Section     1024  asm3-6.o(MyStack)
+    __initial_sp                             0x20000408   Data           0  asm3-6.o(MyStack)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv4$E$P$D$K$B$S$7EM$VFPi3$EXTD16$VFPS$VFMA$PE$A:L22UL41UL21$X:L11$S22US41US21$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$ER_IROM1$$RO$$Base                0x08000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$ER_IROM1$$RO$$Limit               0x08000094   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$RW$$Base                0x20000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$RW$$Limit               0x20000008   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$ZI$$Base                0x20000008   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$ZI$$Limit               0x20000408   Number         0  anon$$obj.o ABSOLUTE
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x08000009
+
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x0000009c, Max: 0x00080000, ABSOLUTE)
+
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00000094, Max: 0x00080000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x08000000   0x08000000   0x00000008   Data   RO            2    Reset               asm3-6.o
+    0x08000008   0x08000008   0x0000008c   Code   RO            3  * Init                asm3-6.o
+
+
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08000094, Size: 0x00000408, Max: 0x00020000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000   0x08000094   0x00000008   Data   RW            4    MyData              asm3-6.o
+    0x20000008        -       0x00000400   Zero   RW            1    MyStack             asm3-6.o
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+       140         26          8          8       1024        264   asm3-6.o
+
+    ----------------------------------------------------------------------
+       140         26          8          8       1024        264   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+       140         26          8          8       1024        264   Grand Totals
+       140         26          8          8       1024        264   ELF Image Totals
+       140         26          8          8          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                  148 (   0.14kB)
+    Total RW  Size (RW Data + ZI Data)              1032 (   1.01kB)
+    Total ROM Size (Code + RO Data + RW Data)        156 (   0.15kB)
+
+==============================================================================
+

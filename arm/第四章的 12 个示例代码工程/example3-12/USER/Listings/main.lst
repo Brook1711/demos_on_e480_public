@@ -1,0 +1,214 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;
+    2 00000000         ;ÊµÑéÃû³Æ£ºLEDÑÓÊ±ÉÁË¸ÊµÑé
+    3 00000000         ;
+    4 00000000         ;Ó²¼þÄ£¿é£º¼ÆËã»úÔ­ÀíÓ¦ÓÃÊµÑéÏä
+    5 00000000         ;
+    6 00000000         ;Ó²¼þ½ÓÏß£ºARM P12½Ó¿Ú---------LED P2½Ó¿Ú
+    7 00000000         ;           PF0~PF7----------LED1~LED8
+    8 00000000         ;       ×¢£º¿ÉÊ¹ÓÃ20PÅÅÏßÖ±Á¬P12¡¢P2½Ó¿Ú¡£
+    9 00000000         ;      
+   10 00000000         ;ÊµÑéÏÖÏó£ºLEDµÆÃ¿500ºÁÃëµçÆ½·­×ªÒ»´Î£¬ÊµÏÖÑÓÊ±ÉÁË¸Ð§¹û¡
+                       £
+   11 00000000         ;
+   12 00000000         ;¸üÐÂÊ±¼ä£º2018-10-11
+   13 00000000         ;*******************************************************
+                       *******
+   14 00000000                 THUMB
+   15 00000000                 REQUIRE8
+   16 00000000                 PRESERVE8
+   17 00000000         
+   18 00000000 00000000 
+                       __ARM_use_no_argv
+                               EQU              0
+   19 00000000         
+   20 00000000                 EXPORT           __ARM_use_no_argv
+   21 00000000                 EXPORT           main
+   22 00000000         
+   23 00000000                 IMPORT           RCC_AHB1PeriphClockCmd
+   24 00000000                 IMPORT           GPIO_Init
+   25 00000000                 IMPORT           Delay_Init
+   26 00000000                 IMPORT           GPIO_Write
+   27 00000000                 IMPORT           Delay_Ms
+   28 00000000         
+   29 00000000                 AREA             ||i.main||, CODE, READONLY, ALI
+GN=2
+   30 00000000         
+   31 00000000         |GPIOF|
+   32 00000000 40021400        DCD              0x40021400
+   33 00000004         ;int main(void)  
+   34 00000004         main    PROC
+   35 00000004 B51C            PUSH             {r2-r4,lr}
+   36 00000006 2101            MOVS             r1,#1
+   37 00000008 2020            MOVS             r0,#0x20
+   38 0000000A F7FF FFFE       BL               RCC_AHB1PeriphClockCmd 
+                                                            ;¿ªÆôGPIOFµÄÊ±ÖÓ
+   39 0000000E F64F 70FF       MOV              r0,#0xffff
+   40 00000012 9000            STR              r0,[sp,#0]  ;Ñ¡ÔñÒý½Å£¬È«²¿Òý½Å
+                                                            
+   41 00000014 2001            MOVS             r0,#1
+   42 00000016 F88D 0004       STRB             r0,[sp,#4]  ;Êä³öÄ£Ê½
+   43 0000001A 2000            MOVS             r0,#0
+   44 0000001C F88D 0006       STRB             r0,[sp,#6]  ;ÍÆÍìÊä³ö
+   45 00000020 2001            MOVS             r0,#1
+   46 00000022 F88D 0005       STRB             r0,[sp,#5]  ;Êä³öËÙÂÊ25MHz
+   47 00000026 4669            MOV              r1,sp
+   48 00000028 F85F 002C       LDR              r0,|GPIOF|
+   49 0000002C F7FF FFFE       BL               GPIO_Init   ;¶Ë¿Ú³õÊ¼»¯
+   50 00000030 F7FF FFFE       BL               Delay_Init  ;ÑÓÊ±³õÊ¼»¯
+   51 00000034 21FF            MOVS             r1,#0xff
+   52 00000036 F85F 0038       LDR              r0,|GPIOF|
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   53 0000003A F7FF FFFE       BL               GPIO_Write  ;GPIOF¸³³õÖµ
+   54 0000003E E011            B                |while|
+   55 00000040         
+   56 00000040         |loop|
+   57 00000040 2100            MOVS             r1,#0
+   58 00000042 F85F 0044       LDR              r0,|GPIOF|  ;GPIOFÐ´0x00£¬LEDµÆ
+                                                            Ï¨Ãð
+   59 00000046 F7FF FFFE       BL               GPIO_Write
+   60 0000004A F44F 70FA       MOV              r0,#0x1f4
+   61 0000004E F7FF FFFE       BL               Delay_Ms    ;ÑÓÊ±500ms
+   62 00000052 21FF            MOVS             r1,#0xff
+   63 00000054 F85F 0058       LDR              r0,|GPIOF|  ;GPIOFÐ´0xff£¬LEDµÆ
+                                                            µãÁÁ 
+   64 00000058 F7FF FFFE       BL               GPIO_Write
+   65 0000005C F44F 70FA       MOV              r0,#0x1f4
+   66 00000060 F7FF FFFE       BL               Delay_Ms    ;ÑÓÊ±500ms
+   67 00000064         |while|
+   68 00000064 E7EC            B                |loop|
+   69 00000066                 ENDP
+   70 00000066         
+   71 00000066                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\main.d -o.\objects\main.o -I.\RTE\_Target_1 -ID:\Keil
+_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Includ
+e -ID:\Keil_v5\ARM\CMSIS\Include -ID:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.
+0\Device\Include --predefine="__UVISION_VERSION SETA 526" --predefine="STM32F40
+7xx SETA 1" --list=.\listings\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+GPIOF 00000000
+
+Symbol: GPIOF
+   Definitions
+      At line 31 in file main.s
+   Uses
+      At line 48 in file main.s
+      At line 52 in file main.s
+      At line 58 in file main.s
+      At line 63 in file main.s
+
+loop 00000040
+
+Symbol: loop
+   Definitions
+      At line 56 in file main.s
+   Uses
+      At line 68 in file main.s
+Comment: loop used once
+main 00000004
+
+Symbol: main
+   Definitions
+      At line 34 in file main.s
+   Uses
+      At line 21 in file main.s
+Comment: main used once
+while 00000064
+
+Symbol: while
+   Definitions
+      At line 67 in file main.s
+   Uses
+      At line 54 in file main.s
+Comment: while used once
+|i.main| 00000000
+
+Symbol: |i.main|
+   Definitions
+      At line 29 in file main.s
+   Uses
+      None
+Comment: |i.main| unused
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+__ARM_use_no_argv 00000000
+
+Symbol: __ARM_use_no_argv
+   Definitions
+      At line 18 in file main.s
+   Uses
+      At line 20 in file main.s
+Comment: __ARM_use_no_argv used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Delay_Init 00000000
+
+Symbol: Delay_Init
+   Definitions
+      At line 25 in file main.s
+   Uses
+      At line 50 in file main.s
+Comment: Delay_Init used once
+Delay_Ms 00000000
+
+Symbol: Delay_Ms
+   Definitions
+      At line 27 in file main.s
+   Uses
+      At line 61 in file main.s
+      At line 66 in file main.s
+
+GPIO_Init 00000000
+
+Symbol: GPIO_Init
+   Definitions
+      At line 24 in file main.s
+   Uses
+      At line 49 in file main.s
+Comment: GPIO_Init used once
+GPIO_Write 00000000
+
+Symbol: GPIO_Write
+   Definitions
+      At line 26 in file main.s
+   Uses
+      At line 53 in file main.s
+      At line 59 in file main.s
+      At line 64 in file main.s
+
+RCC_AHB1PeriphClockCmd 00000000
+
+Symbol: RCC_AHB1PeriphClockCmd
+   Definitions
+      At line 23 in file main.s
+   Uses
+      At line 38 in file main.s
+Comment: RCC_AHB1PeriphClockCmd used once
+5 symbols
+344 symbols in table

@@ -1,0 +1,212 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; asm3-3.s
+    2 00000000 000001C8 
+                       N1      EQU              456
+    3 00000000 000004FE 
+                       N2      EQU              1278
+    4 00000000 00000055 
+                       N3      EQU              85
+    5 00000000         
+    6 00000000         ; Õ»ÅäÖÃ
+    7 00000000 00000400 
+                       Stack_Size
+                               EQU              0x00000400  ; ¶¨ÒåÕ»¿Õ¼ä´óÐ¡
+    8 00000000                 AREA             MyStack, NOINIT, READWRITE, ALI
+GN=3 
+                                                            ; ÉùÃ÷Õ»¶Î
+    9 00000000         Stack_Mem
+                               SPACE            Stack_Size  ; ·ÖÅäÄÚ´æ¿Õ¼ä
+   10 00000400         __initial_sp
+   11 00000400         
+   12 00000400         ; Òì³£/ÖÐ¶ÏÏòÁ¿±í£¨¸´Î»ºó£¬ÏòÁ¿±íÎ»ÓÚµØÖ· 0 ´¦£©
+   13 00000400                 AREA             Reset, DATA, READONLY 
+                                                            ; ÉùÃ÷ResetÊý¾Ý¶Î
+   14 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Õ»¶¥µØÖ·£¨MSP³õÊ
+                                                            ¼Öµ£©
+   15 00000004 00000000        DCD              Reset_Handler ; ¡°¸´Î»¡±Òì³£´¦À
+                                                            í´úÂëµÄÆðÊ¼µØÖ·
+   16 00000008         
+   17 00000008                 THUMB                        ; ±íÊ¾½ÓÏÂÀ´µÄ´úÂëÎ
+                                                            ªTHUMBÖ¸Áî¼¯
+   18 00000008                 PRESERVE8                    ; ±íÊ¾½ÓÏÂÀ´µÄ´úÂë±
+                                                            £³Ö8 ×Ö½ÚÕ»¶ÔÆë
+   19 00000008                 AREA             Init, CODE, READONLY 
+                                                            ; ÉùÃ÷´úÂë¶Î
+   20 00000000                 ENTRY
+   21 00000000         ; ¡°¸´Î»¡±Òì³£´¦Àí´úÂë
+   22 00000000         Reset_Handler
+   23 00000000 F44F 70E4       LDR              r0,  =N1    ; È¡µÚ1¸öÊý
+   24 00000004 F240 41FE       LDR              r1,  =N2    ; È¡µÚ2¸öÊý
+   25 00000008 F04F 0255       LDR              r2,  =N3    ; È¡µÚ3¸öÊý
+   26 0000000C 4288            CMP              r0,  r1     ; ±È½Ïr0,  r1´óÐ¡
+   27 0000000E D800            BHI              next        ; Èôr0´óÔòÌø×ªµ½nex
+                                                            t
+   28 00000010 4608            MOV              r0,  r1     ; Èôr1´óÔò´æÈër0
+   29 00000012         next
+   30 00000012 4290            CMP              r0,  r2     ; ±È½Ïr0,  r2´óÐ¡
+   31 00000014 D800            BHI              deadloop    ; Èôr0´óÔòÌø×ªµ½dea
+                                                            dloop
+   32 00000016 4610            MOV              r0,  r2     ; Èôr2´óÔò´æÈër0
+   33 00000018         
+   34 00000018         ;   CMP  r0,  r1  ; ±È½Ïr0,  r1´óÐ¡
+   35 00000018         ;   MOVLT  r0,  r1 ; Èç¹ûr0 < r1, ½« r1 -> r0
+   36 00000018         ;   CMP  r0,  r2  ; ±È½Ïr0,  r2´óÐ¡
+   37 00000018         ;   MOVLT  r0,  r2 ; Èç¹ûr0 < r2, ½« r2 -> r0
+   38 00000018         
+   39 00000018         deadloop
+   40 00000018 E7FE            B                deadloop    ; ÎÞÏÞÑ­»·
+   41 0000001A BF00            NOP
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   42 0000001C                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\asm3-3.d -o.\objects\asm3-3.o -I"F:\µÚËÄÕÂµÄ 12 ¸öÊ¾À
+ý´úÂë¹¤³Ì\asm3-3\RTE\_Target_1" -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0
+\Drivers\CMSIS\Device\ST\STM32F4xx\Include -IC:\Keil_v5\ARM\CMSIS\Include --pre
+define="__UVISION_VERSION SETA 522" --predefine="STM32F407xx SETA 1" --list=.\l
+istings\asm3-3.lst asm3-3.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+MyStack 00000000
+
+Symbol: MyStack
+   Definitions
+      At line 8 in file asm3-3.s
+   Uses
+      None
+Comment: MyStack unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 9 in file asm3-3.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 10 in file asm3-3.s
+   Uses
+      At line 14 in file asm3-3.s
+Comment: __initial_sp used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Reset 00000000
+
+Symbol: Reset
+   Definitions
+      At line 13 in file asm3-3.s
+   Uses
+      None
+Comment: Reset unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 14 in file asm3-3.s
+   Uses
+      None
+Comment: __Vectors unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Init 00000000
+
+Symbol: Init
+   Definitions
+      At line 19 in file asm3-3.s
+   Uses
+      None
+Comment: Init unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 22 in file asm3-3.s
+   Uses
+      At line 15 in file asm3-3.s
+Comment: Reset_Handler used once
+deadloop 00000018
+
+Symbol: deadloop
+   Definitions
+      At line 39 in file asm3-3.s
+   Uses
+      At line 31 in file asm3-3.s
+      At line 40 in file asm3-3.s
+
+next 00000012
+
+Symbol: next
+   Definitions
+      At line 29 in file asm3-3.s
+   Uses
+      At line 27 in file asm3-3.s
+Comment: next used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+N1 000001C8
+
+Symbol: N1
+   Definitions
+      At line 2 in file asm3-3.s
+   Uses
+      At line 23 in file asm3-3.s
+Comment: N1 used once
+N2 000004FE
+
+Symbol: N2
+   Definitions
+      At line 3 in file asm3-3.s
+   Uses
+      At line 24 in file asm3-3.s
+Comment: N2 used once
+N3 00000055
+
+Symbol: N3
+   Definitions
+      At line 4 in file asm3-3.s
+   Uses
+      At line 25 in file asm3-3.s
+Comment: N3 used once
+Stack_Size 00000400
+
+Symbol: Stack_Size
+   Definitions
+      At line 7 in file asm3-3.s
+   Uses
+      At line 9 in file asm3-3.s
+Comment: Stack_Size used once
+4 symbols
+346 symbols in table

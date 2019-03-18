@@ -1,0 +1,120 @@
+Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+==============================================================================
+
+Section Cross References
+
+    add.o(i.testfunc) refers to add.o(.emb_text) for my_add_embedded_asm
+    asm3-10.o(.text) refers to add.o(i.testfunc) for testfunc
+    start.o(Reset) refers to start.o(MyStack) for __initial_sp
+    start.o(Reset) refers to start.o(Init) for Reset_Handler
+    start.o(Init) refers to asm3-10.o(.text) for MyMain
+
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    add.c                                    0x00000000   Number         0  add.o ABSOLUTE
+    add.c                                    0x00000000   Number         0  add.o ABSOLUTE
+    asm3-10.s                                0x00000000   Number         0  asm3-10.o ABSOLUTE
+    start.s                                  0x00000000   Number         0  start.o ABSOLUTE
+    Reset                                    0x08000000   Section        8  start.o(Reset)
+    .emb_text                                0x08000008   Section       16  add.o(.emb_text)
+    $v0                                      0x08000008   Number         0  add.o(.emb_text)
+    .text                                    0x08000018   Section       76  asm3-10.o(.text)
+    $v0                                      0x08000018   Number         0  asm3-10.o(.text)
+    Init                                     0x08000064   Section        8  start.o(Init)
+    $v0                                      0x08000064   Number         0  start.o(Init)
+    Reset_Handler                            0x08000065   Thumb Code     0  start.o(Init)
+    i.testfunc                               0x0800006c   Section        0  add.o(i.testfunc)
+    MyStack                                  0x20000000   Section     1024  start.o(MyStack)
+    __initial_sp                             0x20000400   Data           0  start.o(MyStack)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv4$E$P$D$K$B$S$7EM$VFPi3$EXTD16$VFPS$VFMA$PE$A:L22UL41UL21$X:L11$S22US41US21$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$REQ8$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$ER_IROM1$$RO$$Base                0x08000000   Number         0  anon$$obj.o ABSOLUTE
+    my_add_embedded_asm                      0x08000009   Thumb Code    16  add.o(.emb_text)
+    MyMain                                   0x08000019   Thumb Code    42  asm3-10.o(.text)
+    my_add_asm                               0x08000043   Thumb Code    16  asm3-10.o(.text)
+    testfunc                                 0x0800006d   Thumb Code    30  add.o(i.testfunc)
+    Image$$ER_IROM1$$RO$$Limit               0x0800008c   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$RW$$Base                0x20000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$RW$$Limit               0x20000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$ZI$$Base                0x20000000   Number         0  anon$$obj.o ABSOLUTE
+    Image$$RW_IRAM1$$ZI$$Limit               0x20000400   Number         0  anon$$obj.o ABSOLUTE
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x08000065
+
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x0000008c, Max: 0x00080000, ABSOLUTE)
+
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x0000008c, Max: 0x00080000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x08000000   0x08000000   0x00000008   Data   RO           24    Reset               start.o
+    0x08000008   0x08000008   0x00000010   Code   RO            1    .emb_text           add.o
+    0x08000018   0x08000018   0x0000004c   Code   RO           19    .text               asm3-10.o
+    0x08000064   0x08000064   0x00000008   Code   RO           25  * Init                start.o
+    0x0800006c   0x0800006c   0x0000001e   Code   RO            2    i.testfunc          add.o
+
+
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x0800008c, Size: 0x00000400, Max: 0x00020000, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000        -       0x00000400   Zero   RW           23    MyStack             start.o
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+        46          0          0          0          0       2259   add.o
+        76         16          0          0          0        388   asm3-10.o
+         8          4          8          0       1024        192   start.o
+
+    ----------------------------------------------------------------------
+       132         20          8          0       1024       2839   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         2          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+       132         20          8          0       1024       2739   Grand Totals
+       132         20          8          0       1024       2739   ELF Image Totals
+       132         20          8          0          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                  140 (   0.14kB)
+    Total RW  Size (RW Data + ZI Data)              1024 (   1.00kB)
+    Total ROM Size (Code + RO Data + RW Data)        140 (   0.14kB)
+
+==============================================================================
+

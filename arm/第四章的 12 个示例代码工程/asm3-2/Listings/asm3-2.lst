@@ -1,0 +1,181 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; asm3-2.s
+    2 00000000         ; 栈配置
+    3 00000000 00000400 
+                       Stack_Size
+                               EQU              0x00000400  ; 定义栈空间�
+                                                            �小
+    4 00000000                 AREA             MyStack, NOINIT, READWRITE, ALI
+GN=3 
+                                                            ; 声明栈段
+    5 00000000         Stack_Mem
+                               SPACE            Stack_Size  ; 分配内存空�
+                                                            �
+    6 00000400         __initial_sp
+    7 00000400         
+    8 00000400         ; 异常/中断向量表（复位后，向量表位于�
+                       �址 0 处）
+    9 00000400                 AREA             Reset, DATA, READONLY ; 声明R
+                                                            eset数据段
+   10 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; 栈顶地址（M
+                                                            SP初始值）
+   11 00000004 00000000        DCD              Reset_Handler ; “复位”异
+                                                            常处理代码的�
+                                                            ��始地址
+   12 00000008         
+   13 00000008                 THUMB                        ; 表示接下来�
+                                                            �代码为THUMB指�
+                                                            ��集
+   14 00000008                 PRESERVE8                    ; 表示接下来�
+                                                            �代码保持8 字�
+                                                            ��栈对齐
+   15 00000008                 AREA             Init, CODE, READONLY 
+                                                            ; 声明代码段
+   16 00000000                 ENTRY
+   17 00000000         ; “复位”异常处理代码
+   18 00000000         Reset_Handler
+   19 00000000 F04F 030A       MOV              r3, 0x0A    ; 把待转换的�
+                                                            �位16进制数放�
+                                                            ��R3第4位
+   20 00000004 2B09            CMPS             r3, #9      ; 判断R3是否已
+                                                            大于9
+   21 00000006 DD01            BLE              Next        ; 不大于9则跳�
+                                                            ��
+   22 00000008 F103 0307       ADD              r3, r3, #7  ; 大于9，预增7
+                                                            
+   23 0000000C         Next
+   24 0000000C F103 0330       ADD              r3, r3, #'0' 
+                                                            ; 转换为ASCII码
+                                                            
+   25 00000010         ; 此时R3低8位是转换后的ASCII码
+   26 00000010         deadloop
+   27 00000010 E7FE            B                deadloop    ; 无限循环
+   28 00000012 BF00            NOP
+   29 00000014                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\asm3-2.d -o.\objects\asm3-2.o -I.\RTE\_Target_1 -ID:\
+Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\In
+clude -ID:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 526" -
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+-predefine="STM32F407xx SETA 1" --list=.\listings\asm3-2.lst asm3-2.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+MyStack 00000000
+
+Symbol: MyStack
+   Definitions
+      At line 4 in file asm3-2.s
+   Uses
+      None
+Comment: MyStack unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 5 in file asm3-2.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 6 in file asm3-2.s
+   Uses
+      At line 10 in file asm3-2.s
+Comment: __initial_sp used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Reset 00000000
+
+Symbol: Reset
+   Definitions
+      At line 9 in file asm3-2.s
+   Uses
+      None
+Comment: Reset unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 10 in file asm3-2.s
+   Uses
+      None
+Comment: __Vectors unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Init 00000000
+
+Symbol: Init
+   Definitions
+      At line 15 in file asm3-2.s
+   Uses
+      None
+Comment: Init unused
+Next 0000000C
+
+Symbol: Next
+   Definitions
+      At line 23 in file asm3-2.s
+   Uses
+      At line 21 in file asm3-2.s
+Comment: Next used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 18 in file asm3-2.s
+   Uses
+      At line 11 in file asm3-2.s
+Comment: Reset_Handler used once
+deadloop 00000010
+
+Symbol: deadloop
+   Definitions
+      At line 26 in file asm3-2.s
+   Uses
+      At line 27 in file asm3-2.s
+Comment: deadloop used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Stack_Size 00000400
+
+Symbol: Stack_Size
+   Definitions
+      At line 3 in file asm3-2.s
+   Uses
+      At line 5 in file asm3-2.s
+Comment: Stack_Size used once
+1 symbol
+343 symbols in table

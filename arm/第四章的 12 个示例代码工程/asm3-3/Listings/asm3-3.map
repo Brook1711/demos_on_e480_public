@@ -1,0 +1,94 @@
+Component: ARM Compiler 5.06 update 4 (build 422) Tool: armlink [4d35d2]
+
+==============================================================================
+
+Section Cross References
+
+    asm3-3.o(Reset) refers to asm3-3.o(MyStack) for __initial_sp
+    asm3-3.o(Reset) refers to asm3-3.o(Init) for Reset_Handler
+
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    asm3-3.s                                 0x00000000   Number         0  asm3-3.o ABSOLUTE
+    Reset                                    0x08000000   Section        8  asm3-3.o(Reset)
+    Init                                     0x08000008   Section       28  asm3-3.o(Init)
+    $v0                                      0x08000008   Number         0  asm3-3.o(Init)
+    Reset_Handler                            0x08000009   Thumb Code     0  asm3-3.o(Init)
+    MyStack                                  0x20000000   Section     1024  asm3-3.o(MyStack)
+    __initial_sp                             0x20000400   Data           0  asm3-3.o(MyStack)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv4$E$P$D$K$B$S$7EM$VFPi3$EXTD16$VFPS$VFMA$PE$A:L22UL41UL21$X:L11$S22US41US21$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x08000009
+
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00000024, Max: 0x00080000, ABSOLUTE)
+
+    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x00000024, Max: 0x00080000, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x08000000   0x00000008   Data   RO            2    Reset               asm3-3.o
+    0x08000008   0x0000001c   Code   RO            3  * Init                asm3-3.o
+
+
+    Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x00000400, Max: 0x00020000, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000   0x00000400   Zero   RW            1    MyStack             asm3-3.o
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+        28          0          8          0       1024        244   asm3-3.o
+
+    ----------------------------------------------------------------------
+        28          0          8          0       1024        244   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+        28          0          8          0       1024        244   Grand Totals
+        28          0          8          0       1024        244   ELF Image Totals
+        28          0          8          0          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                   36 (   0.04kB)
+    Total RW  Size (RW Data + ZI Data)              1024 (   1.00kB)
+    Total ROM Size (Code + RO Data + RW Data)         36 (   0.04kB)
+
+==============================================================================
+

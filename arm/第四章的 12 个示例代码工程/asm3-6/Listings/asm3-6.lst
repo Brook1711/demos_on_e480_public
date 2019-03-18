@@ -1,0 +1,415 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; asm3-6.s
+    2 00000000         ; Õ»ÅäÖÃ
+    3 00000000 00000400 
+                       Stack_Size
+                               EQU              0x00000400  ; ¶¨ÒåÕ»¿Õ¼ä´óÐ¡
+    4 00000000                 AREA             MyStack, NOINIT, READWRITE, ALI
+GN=3 
+                                                            ; ÉùÃ÷Õ»¶Î
+    5 00000000         Stack_Mem
+                               SPACE            Stack_Size  ; ·ÖÅäÄÚ´æ¿Õ¼ä
+    6 00000400         __initial_sp
+    7 00000400         
+    8 00000400         ; Òì³£/ÖÐ¶ÏÏòÁ¿±í£¨¸´Î»ºó£¬ÏòÁ¿±íÎ»ÓÚµØÖ· 0 ´¦£©
+    9 00000400                 AREA             Reset, DATA, READONLY 
+                                                            ; ÉùÃ÷ResetÊý¾Ý¶Î
+   10 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Õ»¶¥µØÖ·£¨MSP³õÊ
+                                                            ¼Öµ£©
+   11 00000004 00000000        DCD              Reset_Handler ; ¡°¸´Î»¡±Òì³£´¦À
+                                                            í´úÂëµÄÆðÊ¼µØÖ·
+   12 00000008         
+   13 00000008                 THUMB                        ; ±íÊ¾½ÓÏÂÀ´µÄ´úÂëÎ
+                                                            ªTHUMBÖ¸Áî¼¯
+   14 00000008                 PRESERVE8                    ; ±íÊ¾½ÓÏÂÀ´µÄ´úÂë±
+                                                            £³Ö8 ×Ö½ÚÕ»¶ÔÆë
+   15 00000008                 AREA             Init, CODE, READONLY 
+                                                            ; ÉùÃ÷´úÂë¶Î
+   16 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Base| 
+                                                            ; RO¶ÎÆðÊ¼µØÖ·
+   17 00000000                 IMPORT           |Image$$ER_IROM1$$RO$$Limit| ; 
+                                                            RO¶ÎÄ©µØÖ·ºóÃæµÄµØÖ
+                                                            ·,¼´RW¶ÎÆðÊ¼µØÖ·
+   18 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Base| ; R
+                                                            W¶ÎÔÚRAMÀïµÄÔËÐÐÇøÆ
+                                                            ðÊ¼µØÖ·
+   19 00000000                 IMPORT           |Image$$RW_IRAM1$$RW$$Limit| ;R
+                                                            W¶ÎÔÚRAMÀïµÄÔËÐÐÇøÄ
+                                                            ©µØÖ·ºóÃæµÄµØÖ·
+   20 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Base| ; Z
+                                                            I¶ÎÔÚRAMÀïµÄÔËÐÐÇøÆ
+                                                            ðÊ¼µØÖ·
+   21 00000000                 IMPORT           |Image$$RW_IRAM1$$ZI$$Limit| ;Z
+                                                            I¶ÎÔÚRAMÀïµÄÔËÐÐÇøÄ
+                                                            ©µØÖ·ºóÃæµÄµØÖ·
+   22 00000000                 ENTRY
+   23 00000000         ; ¡°¸´Î»¡±Òì³£´¦Àí´úÂë
+   24 00000000         Reset_Handler
+   25 00000000         ; RW¶ÎºÍZI¶Î³õÊ¼»¯´úÂë£¨µÚ25-41ÐÐ£©£ºÍê³ÉRW¶ÎÊý¾ÝµÄ¿½±´º
+                       ÍZI¶ÎµÄÇåÁã
+   26 00000000         ; RW¶ÎÊý¾ÝµÄ¿½±´£º´ÓImageÀïµÄ¼ÓÔØÇø¿½±´µ½RAMÀïÔËÐÐÇø£¨µÚ
+                       26-34ÐÐ£©
+   27 00000000 481C            LDR              r0,  =|Image$$ER_IROM1$$RO$$Lim
+it|
+   28 00000002 491D            LDR              r1,  =|Image$$RW_IRAM1$$RW$$Bas
+e|
+   29 00000004 4B1D            LDR              r3,  =|Image$$RW_IRAM1$$ZI$$Bas
+e|
+   30 00000006         Init_RW
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   31 00000006 4299            CMP              r1,  r3
+   32 00000008 BF3C F850 
+              2B04             LDRCC            r2,  [r0], #4
+   33 0000000E F841 2B04       STRCC            r2,  [r1], #4
+   34 00000012 D3F8            BCC              Init_RW
+   35 00000014         ; ZI¶ÎÇåÁã£ºZI¶ÎÔÚRAMÀïµÄÔËÐÐÇøÈ«²¿ÇåÁã£¨µÚ35-41ÐÐ£©
+   36 00000014 491A            LDR              r1,  =|Image$$RW_IRAM1$$ZI$$Lim
+it|
+   37 00000016 F04F 0200       MOV              r2,  #0
+   38 0000001A         Init_ZI
+   39 0000001A 428B            CMP              r3,  r1
+   40 0000001C BF38 F843 
+              2B04             STRCC            r2,  [r3],#4
+   41 00000022 D3FA            BCC              Init_ZI
+   42 00000024         
+   43 00000024         ; ¹¦ÄÜ´úÂë£º½«4Î»Ê®Áù½øÖÆÊý×ª»»ÎªÏàÓ¦µÄASCIIÂë×Ö·û´®
+   44 00000024 4817            LDR              r0,  =Number ; ´ý×ª»»µÄ4Î»Ê®Áù½
+                                                            øÖÆÊýµÄµØÖ·
+   45 00000026 6801            LDR              r1, [r0]    ; ´ý×ª»»µÄ4Î»Ê®Áù½ø
+                                                            ÖÆÊý´æÈër1
+   46 00000028 4A17            LDR              r2,  =String ; °Ñ´æ·Å×Ö·û´®µÄÊ×
+                                                            µØÖ·´æÈër2
+   47 0000002A B406            STMFD            SP!,  {r1-r2 } ; °ÑR1-R2Ñ¹Èë¶ÑÕ
+                                                            »£¬µ¹ÐòÑ¹Èë(ÏÈR2ºóR
+                                                            1)
+   48 0000002C F000 F802       BL               Hex2String  ; µ÷ÓÃ×Ó³ÌÐò
+   49 00000030 BC06            LDMFD            SP!,  {r1-r2 } ; ²ÎÊý³öÕ»£¨ÊÍ·Å
+                                                            ±£´æR1-R2µÄÕ»¿Õ¼ä£©
+                                                            
+   50 00000032         ; ´ËÊ±StringÖÐÊÇ×ª»»ÍêµÄ×Ö·û´®
+   51 00000032         deadloop
+   52 00000032 E7FE            B                deadloop    ; ÎÞÏÞÑ­»·
+   53 00000034         ; ×Ó³ÌÐòHex2String£º4Î»Ê®Áù½øÖÆÊý×ª»»Îª×Ö·û´®
+   54 00000034         Hex2String
+   55 00000034 B57F            STMFD            SP!,  {r0-r6, LR} ; ±£»¤ÏÖ³¡£¬R
+                                                            0-R6, LRÈëÕ»
+   56 00000036 AE08            ADD              r6,  SP,  #8*4 ; Ê¹R7Ö¸Ïò²ÎÊý(Ì
+                                                            ø¹ýÕ»¶¥µÄ8¸ö¼Ä´æÆ÷)
+                                                            
+   57 00000038 F856 0B04       LDR              r0,  [r6], #4 ; È¡³ö ´ý×ª»»µÄ4Î
+                                                            »Ê®Áù½øÖÆÊý µ½R0£¬R
+                                                            6¼Ó4
+   58 0000003C 6831            LDR              r1,  [r6]   ; È¡³ö ´æ·Å×Ö·û´®4×
+                                                            Ö½Úµ¥Ôª µÄÊ×µØÖ· µ½
+                                                            R1
+   59 0000003E F101 0103       ADD              r1,  #3     ; Ê¹R1Ö¸Ïò ´æ·Å×Ö·û
+                                                            ´®4×Ö½Úµ¥Ôª µÄ×îºóÒ
+                                                            »¸ö
+   60 00000042 F04F 0204       MOV              r2,  #4     ; Ñ­»·¼ÆÊý¼Ä´æÆ÷r2¸
+                                                            ³³õÖµÎª4
+   61 00000046         loop
+   62 00000046 4603            MOV              r3,  r0     ; ½« ´ý×ª»»µÄ4Î»Ê®Á
+                                                            ù½øÖÆÊý ¸´ÖÆµ½R3
+   63 00000048 F003 030F       AND              r3,  r3,  #0x0F ; È¡³öµÍ4Î»
+   64 0000004C F000 F809       BL               Hex2ASCII   ; µ÷ÓÃ1Î»16½øÖÆÊý×ª
+                                                            »»ÎªASCII×Ó³ÌÐò
+   65 00000050 F801 3901       STRB             r3,  [r1],  #-1 
+                                                            ; ±£´æ×ª»»½á¹ûASCII
+                                                            
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   66 00000054 EA4F 1010       MOV              r0,  r0,  LSR #4 ; R0ÓÒÒÆ4Î»£¬×
+                                                            ¼±¸´¦ÀíÏÂÒ»¸ö4Î»
+   67 00000058 1E52            SUBS             r2, r2, #1  ; Ñ­»·¼ÆÊýÆ÷¼õ1
+   68 0000005A D1F4            BNE              loop        ; Ñ­»·¼ÆÊýÆ÷²»µÈÓÚ0
+                                                            £¬¼ÌÐøÑ­»·
+   69 0000005C E8BD 407F       LDMFD            SP!,  {r0-r6, LR} ; »Ö¸´ÏÖ³¡£¬R
+                                                            0-R6, LR³öÕ»
+   70 00000060 4770            BX               LR          ; ×Ó³ÌÐò·µ»Ø
+   71 00000062         ; ×Ó³ÌÐòHex2ASCII£º°Ñ1Î»16½øÖÆÊý×ª»»ÎªASCII£¬Èë¿Ú²ÎÊýR3£
+                       ¬³ö¿Ú²ÎÊýR3¡£
+   72 00000062         Hex2ASCII
+   73 00000062 2B09            CMPS             r3, #9      ; ÅÐ¶ÏR3ÊÇ·ñÒÑ´óÓÚ9
+                                                            
+   74 00000064 DD01            BLE              Next        ; ²»´óÓÚ9ÔòÌø×ª
+   75 00000066 F103 0307       ADD              r3, r3, #7  ; ´óÓÚ9£¬Ô¤Ôö7
+   76 0000006A         Next
+   77 0000006A F103 0330       ADD              r3, r3, #'0' ; ×ª»»ÎªASCIIÂë
+   78 0000006E 4770            BX               LR          ; ×Ó³ÌÐò·µ»Ø
+   79 00000070 BF00            NOP
+   80 00000072         
+   81 00000072 00 00 00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000         AREA             MyData, DATA, READWRITE 
+                                                            ; ÉùÃ÷MyDataÊý¾Ý¶Î
+   82 00000000 00008AF5 
+                       Number  DCD              0x8AF5      ; ´ý×ª»»µÄ4Î»Ê®Áù½ø
+                                                            ÖÆÊý
+   83 00000004 00 00 00 
+              00       String  DCB              0, 0, 0, 0  ; ±£´æ×Ö·û´®µÄ¿Õ¼ä
+   84 00000008                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\asm3-6.d -o.\objects\asm3-6.o -I.\RTE\_Target_1 -ID:\
+Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\In
+clude -ID:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_VERSION SETA 526" -
+-predefine="STM32F407xx SETA 1" --list=.\listings\asm3-6.lst asm3-6.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+MyStack 00000000
+
+Symbol: MyStack
+   Definitions
+      At line 4 in file asm3-6.s
+   Uses
+      None
+Comment: MyStack unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 5 in file asm3-6.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 6 in file asm3-6.s
+   Uses
+      At line 10 in file asm3-6.s
+Comment: __initial_sp used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Reset 00000000
+
+Symbol: Reset
+   Definitions
+      At line 9 in file asm3-6.s
+   Uses
+      None
+Comment: Reset unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 10 in file asm3-6.s
+   Uses
+      None
+Comment: __Vectors unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Hex2ASCII 00000062
+
+Symbol: Hex2ASCII
+   Definitions
+      At line 72 in file asm3-6.s
+   Uses
+      At line 64 in file asm3-6.s
+Comment: Hex2ASCII used once
+Hex2String 00000034
+
+Symbol: Hex2String
+   Definitions
+      At line 54 in file asm3-6.s
+   Uses
+      At line 48 in file asm3-6.s
+Comment: Hex2String used once
+Init 00000000
+
+Symbol: Init
+   Definitions
+      At line 15 in file asm3-6.s
+   Uses
+      None
+Comment: Init unused
+Init_RW 00000006
+
+Symbol: Init_RW
+   Definitions
+      At line 30 in file asm3-6.s
+   Uses
+      At line 34 in file asm3-6.s
+Comment: Init_RW used once
+Init_ZI 0000001A
+
+Symbol: Init_ZI
+   Definitions
+      At line 38 in file asm3-6.s
+   Uses
+      At line 41 in file asm3-6.s
+Comment: Init_ZI used once
+Next 0000006A
+
+Symbol: Next
+   Definitions
+      At line 76 in file asm3-6.s
+   Uses
+      At line 74 in file asm3-6.s
+Comment: Next used once
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 24 in file asm3-6.s
+   Uses
+      At line 11 in file asm3-6.s
+Comment: Reset_Handler used once
+deadloop 00000032
+
+Symbol: deadloop
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 51 in file asm3-6.s
+   Uses
+      At line 52 in file asm3-6.s
+Comment: deadloop used once
+loop 00000046
+
+Symbol: loop
+   Definitions
+      At line 61 in file asm3-6.s
+   Uses
+      At line 68 in file asm3-6.s
+Comment: loop used once
+9 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+MyData 00000000
+
+Symbol: MyData
+   Definitions
+      At line 81 in file asm3-6.s
+   Uses
+      None
+Comment: MyData unused
+Number 00000000
+
+Symbol: Number
+   Definitions
+      At line 82 in file asm3-6.s
+   Uses
+      At line 44 in file asm3-6.s
+Comment: Number used once
+String 00000004
+
+Symbol: String
+   Definitions
+      At line 83 in file asm3-6.s
+   Uses
+      At line 46 in file asm3-6.s
+Comment: String used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Stack_Size 00000400
+
+Symbol: Stack_Size
+   Definitions
+      At line 3 in file asm3-6.s
+   Uses
+      At line 5 in file asm3-6.s
+Comment: Stack_Size used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$ER_IROM1$$RO$$Base 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Base
+   Definitions
+      At line 16 in file asm3-6.s
+   Uses
+      None
+Comment: Image$$ER_IROM1$$RO$$Base unused
+Image$$ER_IROM1$$RO$$Limit 00000000
+
+Symbol: Image$$ER_IROM1$$RO$$Limit
+   Definitions
+      At line 17 in file asm3-6.s
+   Uses
+      At line 27 in file asm3-6.s
+Comment: Image$$ER_IROM1$$RO$$Limit used once
+Image$$RW_IRAM1$$RW$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Base
+   Definitions
+      At line 18 in file asm3-6.s
+   Uses
+      At line 28 in file asm3-6.s
+Comment: Image$$RW_IRAM1$$RW$$Base used once
+Image$$RW_IRAM1$$RW$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$RW$$Limit
+   Definitions
+      At line 19 in file asm3-6.s
+   Uses
+      None
+Comment: Image$$RW_IRAM1$$RW$$Limit unused
+Image$$RW_IRAM1$$ZI$$Base 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Base
+   Definitions
+      At line 20 in file asm3-6.s
+   Uses
+      At line 29 in file asm3-6.s
+Comment: Image$$RW_IRAM1$$ZI$$Base used once
+Image$$RW_IRAM1$$ZI$$Limit 00000000
+
+Symbol: Image$$RW_IRAM1$$ZI$$Limit
+   Definitions
+      At line 21 in file asm3-6.s
+   Uses
+      At line 36 in file asm3-6.s
+Comment: Image$$RW_IRAM1$$ZI$$Limit used once
+6 symbols
+359 symbols in table
