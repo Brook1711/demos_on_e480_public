@@ -5,7 +5,8 @@
 <Workspace>
 	<Local Expanded="Yes">
 		<Model Expanded="Yes" ID="{3E2265EA-65D8-4846-B0FB-4968F82B7E68}" Name="SIM" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="../powerdesigner/sim.cdm"/>
-		<Model Expanded="Yes" ID="{82C689C5-A3BB-4F50-8641-B4E00EB4E67D}" Name="SIM_PDM" Selected="Yes" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="SIM_PDM.pdm"/>
+		<Model Expanded="Yes" ID="{82C689C5-A3BB-4F50-8641-B4E00EB4E67D}" Loaded="No" Name="SIM_PDM" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="SIM_PDM.pdm"/>
+		<Model Expanded="Yes" ID="{3E2265EA-65D8-4846-B0FB-4968F82B7E68}" Name="SIM" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="file:///C|/Users/67039/OneDrive/文档/大二下/数据库与云存储/SIM.cdm"/>
 	</Local>
 	<BrowserModule Name="仓库(&amp;R)"/>
 </Workspace>

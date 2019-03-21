@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1553166697 source:f:\demos\demos_on_e480_public\c++\test2\test2\main.cpp
+	<iostream>
+	<vector>
+	<algorithm>
+

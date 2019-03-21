@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1553156486 source:f:\demos\demos_on_e480_public\c++\test3\test3\main.cpp
+	<iostream>
+	<stdio.h>
+
