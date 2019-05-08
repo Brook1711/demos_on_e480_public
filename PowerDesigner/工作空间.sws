@@ -5,8 +5,12 @@
 <Workspace>
 	<Local Expanded="Yes">
 		<Model Expanded="Yes" ID="{3E2265EA-65D8-4846-B0FB-4968F82B7E68}" Name="SIM" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="../powerdesigner/sim.cdm"/>
+		<Model Expanded="Yes" ID="{42663521-7B43-4880-AD92-436BC145645C}" Name="SIM_study_new" Selected="Yes" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="file:///C|/Users/67039/Desktop/SIM_study_new.pdm"/>
+		<Model Expanded="Yes" ID="{7132F486-C0DF-46A9-8A4F-B61F06729945}" Loaded="No" Name="SIM_PDM_0" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="file:///C|/Users/67039/Desktop/study.pdm"/>
+		<Model Expanded="Yes" ID="{595825F7-EDE3-4E8C-8C8D-62019DB7D1EA}" Loaded="No" Name="SIM_sql50" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="file:///c|/users/67039/desktop/sim_sql50.pdm"/>
+		<Model Expanded="Yes" ID="{82C689C5-A3BB-4F50-8641-B4E00EB4E67D}" Loaded="No" Name="SIM_PDM" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="file:///C|/Users/67039/Desktop/SIM_PDM.pdm"/>
+		<Model Expanded="Yes" ID="{3E2265EA-65D8-4846-B0FB-4968F82B7E68}" Loaded="No" Name="SIM" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="file:///C|/Users/67039/OneDrive/文档/大二下/数据库与云存储/SIM.cdm"/>
 		<Model Expanded="Yes" ID="{82C689C5-A3BB-4F50-8641-B4E00EB4E67D}" Loaded="No" Name="SIM_PDM" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="SIM_PDM.pdm"/>
-		<Model Expanded="Yes" ID="{3E2265EA-65D8-4846-B0FB-4968F82B7E68}" Name="SIM" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" URL="file:///C|/Users/67039/OneDrive/文档/大二下/数据库与云存储/SIM.cdm"/>
 	</Local>
 	<BrowserModule Name="仓库(&amp;R)"/>
 </Workspace>
